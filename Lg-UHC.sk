@@ -1,9 +1,10 @@
 #-----------------------------------------------------#
 #					LG UHC par uiytt				  #
-#						  							  #
-#					Version: 2.1.1					  #
+#				Merci à Faywyrr pour son aide		  #
+#					Version: 2.1.3					  #
 #-----------------------------------------------------#
 options:
+	version: 2.1.3
 	debug: false # true = permet aux ops d'avoir le même pouvoir que la Sorcière mais à volonter...
 
 command /lg [<text="help">] [<text>] [<player>] [<text>]:
@@ -20,7 +21,6 @@ command /lg [<text="help">] [<text>] [<player>] [<text>]:
 							set {lg::config::girl::size} to 1
 							set {lg::config::oldone::size} to 1	
 							set {lg::config::cupidon::size} to 1
-							set {lg::config::salvateurl::size} to 1
 							set {lg::config::fox::size} to 1
 							set {lg::config::werewolf::size} to 1
 							set {lg::config::Wwerewolf::size} to 1
@@ -44,6 +44,7 @@ command /lg [<text="help">] [<text>] [<player>] [<text>]:
 							set {lg::config::rtime} to 40 #temps en minutes avant que les rôles ne soit révélés
 							set {lg::config::random} to true
 							set {lg::config::deco} to "friends" #...
+							set {lg::config::hide} to false
 
 							set {lg::config::chat} to "region" #3 mode de communication : "region", "vocal" et "open"
 
@@ -258,13 +259,16 @@ command /lg [<text="help">] [<text>] [<player>] [<text>]:
 						message "&8&l[&6&lLoup-garou&8&l] &cVous n'avez pas la permission nécessaire pour faire ça." to player
 				else if arg 1 is "roles" or "description":
 					if {lg::info::start} is equal to true:
-						loop {lg::joueurs::*}:
-							add {lg::%loop-value%::role} to {_role::*}
-						message "&8&l>> &aRôles encore présents dans la partie :"
-						loop (size of {_role::*}) times:
-							set {_r} to random object out of {_role::*}
-							remove {_r} from {_role::*}
-							message "<tooltip:&8Cliquez pour voir la description du rôle.><cmd:/lg role %{_r}%>&7- %{_r}%" to player
+						if {lg::config::hide} is false:
+							loop {lg::joueurs::*}:
+								add {lg::%loop-value%::role} to {_role::*}
+							message "&8&l>> &aRôles encore présents dans la partie :"
+							loop (size of {_role::*}) times:
+								set {_r} to random object out of {_role::*}
+								remove {_r} from {_role::*}
+								message "<tooltip:&8Cliquez pour voir la description du rôle.><cmd:/lg role %{_r}%>&7- %{_r}%" to player
+						else:
+							message "&8&l[&6&lLoup-garou&8&l] &7La composition des rôles est cachée." to player
 					else:
 						message "&8&l[&6&lLoup-garou&8&l] &7La partie n'est pas lancée." to player
 				else if arg 1 is "reset":
@@ -394,16 +398,8 @@ command /lg [<text="help">] [<text>] [<player>] [<text>]:
 									if arg 2 is "wildchild":
 										lgu_wildchild(player,1)
 									else:
-										message "&cVous n'avez pas le rôle nécessaire" to player
-							else if {lg::%player%::role} is "Voleur":
-								if arg 2 is "steal":
-									if arg 3 is set:
-										set {lg::%player%::role} to arg 3
-										if arg 3 is "Loup-garou" or "Infect père des loups" or "Loup-garou blanc":
-											loop {lg::joueurs::*}:
-												if {lg::%loop-value%::role} is "Loup-garou" or "Infect père des loups" or "Loup-garou blanc":
-													message "&8&l[&c&lLG&8&l] &7Le joueur &3%player% &7est devenu &cloup-garou&7." to loop-value
-										lgu_rolesgive(player,"loup-garou",false)
+										message "&cVous ne pouvez pas faire cette commande" to player
+										
 					if arg 2 is "op":
 						if player has permission "lgu.admin.respawn" or "lgu.admin.*" or "lgu.*":
 							if {@debug} is true:
@@ -565,7 +561,7 @@ command /lg [<text="help">] [<text>] [<player>] [<text>]:
 					message "&r &b role &7ou &bp &7- &rVoir son rôle." to player
 					message "&r  &eLes lg peuvent se parler entre eux en mettant ""*"" devant leurs messages. Les amoureux peuvent faire de même avec ""!"""
 				else if arg 1 is "version" or "v":
-					message "&8&l[&6&lLoup-garou&8&l] &7Version : &e2.1.1 &7par : &euiytt" to player
+					message "&8&l[&6&lLoup-garou&8&l] &7Version : &e{@version} &7par : &euiytt" to player
 					message "&8&l[&6&lLoup-garou&8&l] &7Discord : &euiytt##7002" to player
 				else:
 					message "&8&l[&6&lLoup-garou&8&l] &7/&elg &b..." to player
@@ -620,7 +616,6 @@ command /lg [<text="help">] [<text>] [<player>] [<text>]:
 					lgu_config(player,"death")
 			else:
 				message "&8&l[&6&lLoup-garou&8&l] &7Faites /lg finish pour finir la configuration des items de départ" to player
-
 
 
 function lgu_config(p: player,t: text):
@@ -898,13 +893,8 @@ function lgu_config(p: player,t: text):
 					if {lg::config::angel::size} is higher than 0:
 						remove 1 from {lg::config::angel::size}
 				lgu_config({_p},"extras")
-			make a gui slot 12 of {_p} with 1 iron sword named "&6&lChasseur: %{lg::config::hunter::size}%" with lore "&f&lClique gauche: &a+1 " and "&f&lClique droit: &c-1" to run:
-				if gui-click-type is left mouse button:
-					add 1 to {lg::config::hunter::size}
-				else if gui-click-type is right mouse button:
-					if {lg::config::hunter::size} is higher than 0:
-						remove 1 from {lg::config::hunter::size}
-				lgu_config({_p},"extras")
+			make a gui slot 12 of {_p} with 1 iron sword named "&6&lChasseur: &cDésactivé" with lore "&f&lNe marche pas"
+				
 		else:
 			if {lg::config::seer::size} is 0:
 				make a gui slot 10 of {_p} with 1 red wool named "&6&lVoyante&7: &cDésactivé" with lore "&f&lClique gauche: &aActiver " and "&f&lClique droit: &cDésactiver" to run:
@@ -927,10 +917,7 @@ function lgu_config(p: player,t: text):
 						set {lg::config::angel::size} to 0
 						lgu_config({_p},"extras")
 			if {lg::config::hunter::size} is 0:
-				make a gui slot 12 of {_p} with 1 red wool named "&6&lChasseur&7: &cDésactivé" with lore "&f&lClique gauche: &aActiver " and "&f&lClique droit: &cDésactiver" to run:
-					if gui-click-type is left mouse button:
-						set {lg::config::hunter::size} to 1
-						lgu_config({_p},"extras")
+				make a gui slot 12 of {_p} with 1 red wool named "&6&lChasseur&7: &cDésactivé" with lore "&f&lNe marche pas"
 			else:
 				make a gui slot 12 of {_p} with 1 light green wool named "&6&lChasseur&7: &aActivé" with lore "&f&lClique gauche: &aActiver " and "&f&lClique droit: &cDésactiver" to run:
 					if gui-click-type is right mouse button:
@@ -1266,7 +1253,14 @@ function lgu_config(p: player,t: text):
 			make a gui slot 14 of {_p} with 1 iron chestplate named "&6&lMeetup&7: &cDésactivé" to run:
 				set {lg::config::meetup} to true
 				lgu_config({_p},"rules")
-
+		if {lg::config::hide} is true:
+			make a gui slot 15 of {_p} with 1 ender pearl named "&6&lComposition cachée&7: &aActivé" to run:
+				set {lg::config::hide} to false
+				lgu_config({_p},"rules")
+		else:
+			make a gui slot 15 of {_p} with 1 ender pearl named "&6&lComposition cachée&7: &cDésactivé" to run:
+				set {lg::config::hide} to true
+				lgu_config({_p},"rules")
 
 function lgu_tp(p: player,b: boolean):
 	set {_ok1} to false
@@ -1521,7 +1515,7 @@ function lgu_timer():
 							if {lg::%loop-value%::role} is "Voyante":
 								message "<tooltip:&cCette action n'est réalisable qu'une fois par jour.><cmd:/lg power Voyante>&8&l[&5Cliquez ici dans les 45 secondes pour voir le rôle d'un joueur&8&l]" to loop-value
 							else if {lg::%loop-value%::role} is "Oracle":
-								message "<tooltip:&cCette action n'est réalisable qu'une fois par jour.><cmd:/lg power Oracle>&8&l[&5Cliquez ici dans les 45 secondes pour voir le rôle d'un joueur&8&l]" to loop-value
+								message "<tooltip:&cCette action n'est réalisable qu'une fois par jour.><cmd:/lg power Oracle>&8&l[&5Cliquez ici dans les 45 secondes pour comparer deux joueurs&8&l]" to loop-value
 							else if {lg::%loop-value%::role} is "Assassin":
 								apply strength without any particles to loop-value for {_seconde}
 							else if {lg::%loop-value%::role} is "Salvateur":
@@ -1997,7 +1991,7 @@ function lgu_rolesgive(p: player,r: text,b: boolean):
 			message "&8&l>> &fsi les loups-garous et l'assassin sont morts." to {_p}
 			message "" to {_p}
 			message "&3Pour faire ceci, elle a le droit à :" to {_p}
-			message "&a&l+ &r&7un effet de résistance nocturne" to {_p}
+			message "&a&l+ &r&7un effet d'invisibilité nocturne" to {_p}
 			message "&a&l+ &r&7un effet de vision nocturne" to {_p}
 		case "Ancien":
 			message "&8&l>> &2&lAncien" to {_p}
@@ -2146,7 +2140,7 @@ function lgu_rolesgive(p: player,r: text,b: boolean):
 			if {lg::%{_p}%::role} is "Assassin":
 				if {_b} is true:
 					make console execute command "/give %{_p}% enchanted_book 1 0 {StoredEnchantments:[{id:16,lvl:3}]}"
-					make console execute command "/give %{_p}% enchanted_book 2 0 {StoredEnchantments:[{id:0,lvl:2}]}"
+					make console execute command "/give %{_p}% enchanted_book 1 0 {StoredEnchantments:[{id:0,lvl:2}]}"
 					make console execute command "/give %{_p}% enchanted_book 1 0 {StoredEnchantments:[{id:48,lvl:1}]}"
 					if {lg::config::meetup} is true:
 						make console execute command "/give %{_p}% anvil 1 2"
@@ -2196,7 +2190,7 @@ function lgu_rolesgive(p: player,r: text,b: boolean):
 		case "Inquisiteur":
 			message "&8&l>> &2&lInquisiteur" to {_p}
 			message "&fLes votes ne l'affectent pas et il gagne un cœur toutes les deux personnes votant contre lui." to {_p}
-			message "&fIl peut enlever 5 coeurs au joueur de son choix à sa mort." to {_p}
+			message "&fLors de sa mort, le rôle du tueur est dévoilé." to {_p}
 			message "" to {_p}
 			message "&6Il peut gagner ..." to {_p}
 			message "&8&l>> &fsi les loups-garous et l'assassin sont morts." to {_p}
@@ -2308,7 +2302,6 @@ function lgu_endgame():
 
 	skellett delete stylish scoreboard named "LG_UHC"
 	delete {lg::spec::*}
-
 function lgu_firework(l: location):
 	launch trailing ball large coloured red, blue and green at {_l} timed 1
 	wait 1 seconds
@@ -2319,6 +2312,7 @@ function lgu_firework(l: location):
 	launch flickering trailing creeper coloured red fading to red and green at {_l} timed 1
 	wait 1 seconds
 	launch trailing ball large coloured red, blue and green at {_l} timed 1
+
 function lgu_respawn(p: player,p2: player):
 	open virtual chest inventory with size 5 with name "&lChoisir le rôle" to {_p}
 	make a gui slot 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43 and 44 of {_p} with 1 gray stained glass pane named "&f"
@@ -2883,6 +2877,7 @@ function lgu_salvateur(p: player,page: number):
 			message "&cTu as déjà béni ce joueur la dernière fois, change de joueur." to {_p}
 		add 1 to {_s}	
 
+
 on inventory click:
 	if name of event-inventory is "&8Chassez un joueur" or "&8Punir un hérétique":
 		if clicked item is not a gray stained glass pane:
@@ -3074,9 +3069,16 @@ on death:
 									if {lg::%attacker%::role} is "Voleur":
 										message "" to attacker
 										if {lg::%victim%::role} is not "Cupidon":
-											message "<tooltip:&cAttention cette action n'est réalisable qu'une fois.><cmd:/lg power steal %{lg::%victim%::role}%>&8&l[&aCliquez ici pour voler le rôle &3%{lg::%victim%::role}%&7.&8&l]" to attacker
+											message "&8&l[&6Lg-UHC&8&l] &f>> &7Tu es devenu %{lg::%victim%::role}%" to attacker
+											set {lg::%attacker%::role} to {lg::%victim%::role}
+											lgu_rolesgive(attacker,{lg::%victim%::role},false)
+											if {lg::%attacker%::role} is "Loup-garou" or "Loup-garou blanc" or "Infect père des loups":
+												loop {lg::joueurs::*}:
+													if loop-value is not attacker:
+														if {lg::%loop-value%::role} is "Loup-garou" or "Loup-garou blanc" or "Infect père des loups":
+															message "&8&l[&cLOUP-GAROU&8&l] &c&l%attacker% &r&7 est devenu loup-garou" to loop-value
 										else:
-											message "<tooltip:&7Cupidon est un dieu, tu ne peux pas voler son rôle.>&8&l[&7Cliquez ici pour voler le rôle &3Cupidon&7.&8&l]" to attacker
+											message "<tooltip:&7Cupidon est un dieu, tu ne peux pas voler son rôle.>&8&lCe rôle ne peut pas être volé !" to attacker
 										message "" to attacker
 								if {lg::amoureux::1} is victim:
 									set {_temp1} to {lg::amoureux::1}
@@ -3098,21 +3100,22 @@ on death:
 									message "&cLe joueur &e&l%victim% &cest mort, il était &lVoleur" to all players
 								message "" to all players
 								
-								if {lg::%victim%::role} is not "Chasseur" or "Inquisiteur":
-									delete {lg::%victim%::role}
-									set {_osef} to lgu_wincheck()	
+								if {lg::%victim%::role} is not "Chasseur":
+									delete {lg::%victim%::role}	
+									wait 1 second
+									set {_osef} to lgu_wincheck()
+									if {lg::%victim%::role} is "Inquisiteur":
+										message "&8&l[&6Lg-UHC&8&l] &f>>Le tueur de %victim% est %{lg::%attacker%::role}%" to all players
 								else:
 									set {_ok} to lgu_wincheck()
 									if {_ok} is not true:
 										message "" to victim
-										if {lg::%victim%::role} is "Chasseur":
-											message "<tooltip:&cAttention cette action n'est réalisable qu'une fois.><cmd:/lg power Chasseur>&8&l[&aCliquez ici dans les 30s pour enlever la moitié de la vie d'un joueur.&8&l]" to victim
-										else:
-											message "<tooltip:&cAttention cette action n'est réalisable qu'une fois.><cmd:/lg power Inquisiteur>&8&l[&aCliquez ici dans les 30s pour enlever la moitié de la vie d'un joueur.&8&l]" to victim
+										message "<tooltip:&cAttention cette action n'est réalisable qu'une fois.><cmd:/lg power Chasseur>&8&l[&aCliquez ici dans les 30s pour enlever la moitié de la vie d'un joueur.&8&l]" to victim
 										message "" to victim
 										wait 30 seconds
 									delete {lg::%victim%::role}
 								set the text of id "LG_UHC_4" to "&3&lJOUEURS: &3%size of {lg::joueurs::*}%"
+								
 					else:
 						if {lg::%victim%::master} is set:
 							if {lg::%victim%::master}'s gamemode is survival:
@@ -3146,9 +3149,16 @@ on death:
 							if {lg::%attacker%::role} is "Voleur":
 								message "" to attacker
 								if {lg::%victim%::role} is not "Cupidon":
-									message "<tooltip:&cAttention cette action n'est réalisable qu'une fois.><cmd:/lg power steal %{lg::%victim%::role}%>&8&l[&aCliquez ici pour voler le rôle &3%{lg::%victim%::role}%&7.&8&l]" to attacker
+									message "&8&l[&6Lg-UHC&8&l] &f>> &7Tu es devenu %{lg::%victim%::role}%" to attacker
+									set {lg::%attacker%::role} to {lg::%victim%::role}
+									lgu_rolesgive(attacker,{lg::%victim%::role},false)
+									if {lg::%attacker%::role} is "Loup-garou" or "Loup-garou blanc" or "Infect père des loups":
+										loop {lg::joueurs::*}:
+											if loop-value is not attacker:
+												if {lg::%loop-value%::role} is "Loup-garou" or "Loup-garou blanc" or "Infect père des loups":
+													message "&8&l[&cLOUP-GAROU&8&l] &c&l%attacker% &r&7 est devenu loup-garou" to loop-value
 								else:
-									message "<tooltip:&7Cupidon est un dieu, tu ne peux pas voler son rôle.>&8&l[&7Cliquez ici pour voler le rôle &3Cupidon&7.&8&l]" to attacker
+									message "<tooltip:&7Cupidon est un dieu, tu ne peux pas voler son rôle.>&8&lCe rôle ne peut pas être volé !" to attacker
 								message "" to attacker
 						if {lg::amoureux::1} is victim:
 							set {_temp1} to {lg::amoureux::1}
@@ -3170,19 +3180,21 @@ on death:
 							message "&cLe joueur &e&l%victim% &cest mort, il était &lVoleur" to all players
 						message "" to all players
 						if {lg::%victim%::role} is not "Chasseur":
+							if {lg::%victim%::role} is "Inquisiteur":
+								message "&8&l[&6Lg-UHC&8&l] &f>>Le tueur de %victim% est %{lg::%attacker%::role}%" to all players
 							delete {lg::%victim%::role}
 						set the text of id "LG_UHC_4" to "&3&lJOUEURS: &3%size of {lg::joueurs::*}%"
-						set {_ok} to lgu_wincheck()
-						if {_ok} is not true:
-							if {lg::%victim%::role} is "Chasseur" or "Inquisiteur":
+						if {lg::%victim%::role} is "Chasseur":
+							set {_ok} to lgu_wincheck()
+							if {_ok} is not true:
 								message "" to victim
-								if {lg::%victim%::role} is "Chasseur":
-									message "<tooltip:&cAttention cette action n'est réalisable qu'une fois.><cmd:/lg power Chasseur>&8&l[&aCliquez ici dans les 30s pour enlever la moitié de la vie d'un joueur.&8&l]" to victim
-								else:
-									message "<tooltip:&cAttention cette action n'est réalisable qu'une fois.><cmd:/lg power Inquisiteur>&8&l[&aCliquez ici dans les 30s pour enlever la moitié de la vie d'un joueur.&8&l]" to victim
+								message "<tooltip:&cAttention cette action n'est réalisable qu'une fois.><cmd:/lg power Chasseur>&8&l[&aCliquez ici dans les 30s pour enlever la moitié de la vie d'un joueur.&8&l]" to victim
 								message "" to victim
 								wait 30 seconds
 								delete {lg::%victim%::role}
+						else:
+							wait 1 second
+							set {_osef} to lgu_wincheck()
 
 on quit:
 	if {lg::%player%::role} is set:
