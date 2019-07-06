@@ -1,0 +1,5 @@
+main: fr.uiytt.lguhcinstaller.Main
+name: LgUHC-installer
+version: ${project.version}
+author: uiytt
+description: Ce plugin installera tous les plugins nécessaire pour le Lg-UHC
