@@ -1,10 +1,10 @@
 #-----------------------------------------------------#
 #					LG UHC par uiytt				  #
 #				Merci à Faywyrr pour son aide		  #
-#					Version: 2.2					  #
+#					Version: 2.2.1					  #
 #-----------------------------------------------------#
 options:
-	version: 2.2
+	version: 2.2.1
 	debug: false # true = permet aux ops d'avoir le même pouvoir que la Sorcière mais à volonter...
 
 command /lg [<text="help">] [<text>] [<player>] [<text>]:
@@ -114,9 +114,6 @@ command /lg [<text="help">] [<text>] [<player>] [<text>]:
 								loop all players:
 									apply resistance 4 without any particles to loop-player for 30 seconds
 									set {lg::joueurs::%loop-player%} to loop-player
-									heal loop-player
-									set the loop-player's food level to 10
-									set loop-player's xp to 0
 								loop {lg::spec::*}:
 									if {lg::joueurs::%loop-value%} is set:
 										delete {lg::joueurs::%loop-value%}							
@@ -130,6 +127,9 @@ command /lg [<text="help">] [<text>] [<player>] [<text>]:
 										set loop-value's max health to 10	
 										set loop-value's gamemode to survival
 										clear loop-value's inventory
+										heal loop-value
+										set the loop-value's food level to 10
+										set loop-value's xp to 0
 										lgu_tp(loop-value,false)
 										if {lg::items::*} is set:
 											set {_s} to 0
@@ -3385,12 +3385,16 @@ on death:
 										if {lg::%loop-value%::role} is "Loup-garou" or "Infect père des loups" or "Loup-garou blanc":
 											message "&8&l[&c&lLG&8&l] &7Le joueur &3%{lg::%victim%::master}% &7est devenu &cloup-garou&7." to loop-value
 									delete {lg::%victim%::master}
-						set {lg::%victim%::ADstuff::*} to drops of victim
+						set {lg::%victim%::ADstuff::*} to drops
+						set {_dr::*} to drops
+						remove drops from the drops
 						force victim to respawn
-						add {lg::deathitems::items::*} to drops
+						add {lg::deathitems::items::*} to {_dr::*}
+						set gamemode of victim to spectator
+						loop {_dr::*}:
+							drop loop-value at {lg::var::%victim%}
 						teleport victim to {lg::var::%victim%}
 						strike lightning effect at {lg::var::%victim%}
-						set gamemode of victim to spectator
 						set {lg::%victim%::ADloc} to {lg::var::%victim%}
 						delete {lg::var::%victim%}
 						delete {lg::joueurs::%victim%}
