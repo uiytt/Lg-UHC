@@ -1,10 +1,10 @@
 #-----------------------------------------------------#
 #					LG UHC par uiytt				  #
 #				Merci à Faywyrr pour son aide		  #
-#					Version: 2.2.2					  #
+#					Version: 2.2.3					  #
 #-----------------------------------------------------#
 options:
-	version: 2.2.2
+	version: 2.2.3
 	debug: false # true = permet aux ops d'avoir le même pouvoir que la Sorcière mais à volonté...
 
 command /lg [<text="help">] [<text>] [<player>] [<text>]:
@@ -794,7 +794,7 @@ function lgu_config(p: player,t: text):
 					set {_displayname} to "Nbr d'infects pere des loups"
 					set {_name} to "Owerewolf"
 				else if {_s} is 23:
-					set {_item} to "1 enchanted book"
+					set {_item} to "1 book"
 					set {_displayname} to "Nbr d'assassins"
 					set {_name} to "killer"
 				else if {_s} is 24:
