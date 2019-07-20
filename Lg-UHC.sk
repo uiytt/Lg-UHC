@@ -1,11 +1,11 @@
 #-----------------------------------------------------#
 #					LG UHC par uiytt				  #
 #				Merci à Faywyrr pour son aide		  #
-#					Version: 2.2.1					  #
+#					Version: 2.2.2					  #
 #-----------------------------------------------------#
 options:
-	version: 2.2.1
-	debug: false # true = permet aux ops d'avoir le même pouvoir que la Sorcière mais à volonter...
+	version: 2.2.2
+	debug: false # true = permet aux ops d'avoir le même pouvoir que la Sorcière mais à volonté...
 
 command /lg [<text="help">] [<text>] [<player>] [<text>]:
 	trigger:
@@ -1731,6 +1731,7 @@ function lgu_timer():
 									set {lg::current::voteplayer}'s max health to 10
 								else:
 									set {lg::current::voteplayer}'s max health to 12
+						delete {lg::vote::*}
 						message "" to all players
 						message "&e------------------------------------" to all players
 						message "" to all players
@@ -1738,6 +1739,7 @@ function lgu_timer():
 							message "<cmd:/lg vote>&8&l[&aCliquez ici dans les 45 secondes pour voter&8&l]" to loop-player
 						message "" to all players
 						loop {lg::joueurs::*}:
+							delete {lg::%loop-value%::vote}
 							if {lg::%loop-value%::role} is "Voyante":
 								message "<tooltip:&cCette action n'est réalisable qu'une fois par jour.><cmd:/lg power Voyante>&8&l[&5Cliquez ici dans les 45 secondes pour voir le rôle d'un joueur&8&l]" to loop-value
 							else if {lg::%loop-value%::role} is "Oracle":
@@ -3238,6 +3240,7 @@ on death:
 					if {lg::power::%victim%} is not set:
 						set {lg::power::%victim%} to true
 						set {_stuff::*} to drops
+						remove drops from drops
 						force victim to respawn
 						lgu_tp(victim,true)
 						give {_stuff::*} to victim
@@ -3326,6 +3329,8 @@ on death:
 													if loop-value is not attacker:
 														if {lg::%loop-value%::role} is "Loup-garou" or "Loup-garou blanc" or "Infect père des loups":
 															message "&8&l[&cLOUP-GAROU&8&l] &c&l%attacker% &r&7 est devenu loup-garou" to loop-value
+															if {lg::%attacker%::role} is "Loup-garou blanc":
+																set attacker's max health to 12
 										else:
 											message "<tooltip:&7Cupidon est un dieu, tu ne peux pas voler son rôle.>&8&lCe rôle ne peut pas être volé !" to attacker
 										message "" to attacker
