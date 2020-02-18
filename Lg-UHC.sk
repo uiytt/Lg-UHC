@@ -1,10 +1,10 @@
 #-----------------------------------------------------#
 #					LG UHC par uiytt				  #
 #				Merci à Faywyrr pour son aide		  #
-#					Version: 2.2.3					  #
+#					Version: 2.2.4					  #
 #-----------------------------------------------------#
 options:
-	version: 2.2.3
+	version: 2.2.4
 	debug: false # true = permet aux ops d'avoir le même pouvoir que la Sorcière mais à volonté...
 
 command /lg [<text="help">] [<text>] [<player>] [<text>]:
@@ -19,7 +19,7 @@ command /lg [<text="help">] [<text>] [<player>] [<text>]:
 							set {lg::config::witch::size} to 1
 							set {lg::config::seer::size} to 0
 							set {lg::config::girl::size} to 1
-							set {lg::config::oldone::size} to 1	
+							set {lg::config::oldone::size} to 1
 							set {lg::config::cupidon::size} to 1
 							set {lg::config::fox::size} to 1
 							set {lg::config::werewolf::size} to 1
@@ -70,7 +70,7 @@ command /lg [<text="help">] [<text>] [<player>] [<text>]:
 							make player execute command "/gamerule reducedDebugInfo true"
 							make player execute command "/gamerule showDeathMessages false"
 							make player execute command "/gamerule sendCommandFeedback false"
-							
+
 
 							set {lg::setup} to true
 							message "&8&l[&6&lLoup-garou&8&l] &7La partie a été correctement généré." to player
@@ -116,7 +116,7 @@ command /lg [<text="help">] [<text>] [<player>] [<text>]:
 									set {lg::joueurs::%loop-player%} to loop-player
 								loop {lg::spec::*}:
 									if {lg::joueurs::%loop-value%} is set:
-										delete {lg::joueurs::%loop-value%}							
+										delete {lg::joueurs::%loop-value%}
 								if size of {lg::joueurs::*} is higher than 1:
 									message "&8&l[&6&lLoup-garou&8&l] &7Téléportation en cours..." to all players
 									lgu_scoreboard()
@@ -124,7 +124,7 @@ command /lg [<text="help">] [<text>] [<player>] [<text>]:
 									set time of world("%{lg::current::world}%") to 6:00
 									loop {lg::joueurs::*}:
 										milk loop-value
-										set loop-value's max health to 10	
+										set loop-value's max health to 10
 										set loop-value's gamemode to survival
 										clear loop-value's inventory
 										heal loop-value
@@ -189,13 +189,13 @@ command /lg [<text="help">] [<text>] [<player>] [<text>]:
 										message "&r- &bPas de mort avant le pvp : &aActivé"
 									message "&c/!\ &7Merci de ne pas demander à un joueur de vous taper pour connaître son rôle ou de demander une lettre précise du rôle pour confirmer son rôle &c/!\" to all players
 									lgu_roles()
-										
+
 									set center of world of player to location(0, 0, 0, world("%world of player%"))
 									set diameter of world of player to {lg::config::dborder} over 1 second
 									if {lg::config::day} is not equal to 20:
 										while {lg::info::start} is equal to true:
 											execute console command "/time add %{lg::config::day} - 20%"
-											wait 1 second 
+											wait 1 second
 								else:
 									message "&8&l[&6&lLoup-garou&8&l] &cPas assez de joueurs pour commencer la partie..." to all players
 									set {lg::info::start} to false
@@ -219,7 +219,7 @@ command /lg [<text="help">] [<text>] [<player>] [<text>]:
 								loop 10 times:
 									skellett delete id based score "LG_UHC_%loop-number%" for stylish scoreboard with named "LG_UHC"
 								skellett delete stylish scoreboard named "LG_UHC"
-								
+
 								reset world of player
 							delete {lg::current::*}
 							message "&8&l[&6&lLoup-garou&8&l] &7La partie a été arrêtée." to all players
@@ -296,7 +296,7 @@ command /lg [<text="help">] [<text>] [<player>] [<text>]:
 						message "&8&l[&6&lLoup-garou&8&l] &7La partie n'est pas lancée." to player
 				else if arg 1 is "reset":
 					if player has permission "lgu.admin.reset" or "lgu.admin.*":
-						
+
 						delete {lg::config::*}
 						delete {lg::var::*}
 						delete {lg::power::*}
@@ -330,7 +330,7 @@ command /lg [<text="help">] [<text>] [<player>] [<text>]:
 											lgu_tp(arg 3,true)
 											set offhand tool of arg 3 to totem of undying
 											damage arg 3 by 40
-											
+
 											give {lg::stuff::%arg 3%::*} to arg 3
 										else:
 											message "&cLe joueur &3%arg 3% &cne peut plus être réssucité" to player
@@ -422,7 +422,7 @@ command /lg [<text="help">] [<text>] [<player>] [<text>]:
 										lgu_wildchild(player,1)
 									else:
 										message "&cVous ne pouvez pas faire cette commande" to player
-										
+
 					if arg 2 is "op":
 						if player has permission "lgu.admin.respawn" or "lgu.admin.*" or "lgu.*":
 							if {@debug} is true:
@@ -452,12 +452,12 @@ command /lg [<text="help">] [<text>] [<player>] [<text>]:
 					else:
 						message "&8&l[&6&lLoup-garou&8&l] &cVous n'avez pas la permission nécessaire pour faire ça." to player
 				else if arg 1 is "y":
-					if {lg::info::start} is equal to true: 
+					if {lg::info::start} is equal to true:
 						message "&7Y: &a%round(y-location of player)%" to player
 					else:
 						message "&8&l[&6&lLoup-garou&8&l] &7La partie doit être lancée pour faire cette commande" to player
 				else if arg 1 is "vote":
-					if {lg::info::start} is equal to true: 
+					if {lg::info::start} is equal to true:
 						if {lg::current::vote} is true:
 							if player's gamemode is survival or creative:
 								lgu_vote(player,1)
@@ -551,7 +551,7 @@ command /lg [<text="help">] [<text>] [<player>] [<text>]:
 					if {lg::config::rod} is true:
 						message "&r- &bFishing rod (canne à pêche) : &aAutorisé" to player
 					else:
-						message "&r- &bFishing rod (canne à pêche) : &cInterdit" to player	
+						message "&r- &bFishing rod (canne à pêche) : &cInterdit" to player
 					if {lg::config::diamondlimit} is true:
 						message "&r- &bLimite de diamants: &f%{lg::config::diamondlimitsize}%" to player
 					if {lg::config::horse} is true:
@@ -559,12 +559,12 @@ command /lg [<text="help">] [<text>] [<player>] [<text>]:
 					else:
 						message "&r- &bChevaux : &cInterdit" to player
 					if {lg::config::nofire} is true:
-						message "&r- &bNoFire : &aActivé" to all players
+						message "&r- &bNoFire : &aActivé" to player
 					if {lg::config::finalheal} is true:
 						message "&r- &bFinal Heal : &aActivé"
 					if {lg::config::nodeathbeforepvp} is true:
 						message "&r- &bPas de mort avant le pvp : &aActivé"
-					message "&c/!\ &7Merci de ne pas demander à un joueur de vous taper pour connaître son rôle ou de demander une lettre précise du message rôle pour confirmer son rôle &c/!\" to player		
+					message "&c/!\ &7Merci de ne pas demander à un joueur de vous taper pour connaître son rôle ou de demander une lettre précise du message rôle pour confirmer son rôle &c/!\" to player
 				else if arg 1 is "help":
 					message "&8&l[&6&lLoup-garou&8&l] &7/&elg &b..." to player
 					message "&r &b roles &7- &rVoir les rôles encore vivants" to player
@@ -750,7 +750,7 @@ function lgu_config(p: player,t: text):
 			set {_s} to 10
 			loop 16 times:
 				if {_s} is 17:
-					set {_s} to 19 
+					set {_s} to 19
 				if {_s} is 26:
 					set {_s} to 28
 				if {_s} is 10:
@@ -842,9 +842,9 @@ function lgu_config(p: player,t: text):
 			set {_s} to 10
 			loop 16 times:
 				if {_s} is 17:
-					set {_s} to 19 
+					set {_s} to 19
 				if {_s} is 26:
-					set {_s} to 28 
+					set {_s} to 28
 				if {_s} is 10:
 					set {_displayname} to "Villageois"
 					set {_name} to "villager"
@@ -930,7 +930,7 @@ function lgu_config(p: player,t: text):
 						remove 1 from {lg::config::angel::size}
 				lgu_config({_p},"extras")
 			make a gui slot 12 of {_p} with 1 iron sword named "&6&lChasseur: &cDésactivé" with lore "&f&lNe marche pas"
-				
+
 		else:
 			if {lg::config::seer::size} is 0:
 				make a gui slot 10 of {_p} with 1 red wool named "&6&lVoyante&7: &cDésactivé" with lore "&f&lClique gauche: &aActiver " and "&f&lClique droit: &cDésactiver" to run:
@@ -1206,7 +1206,7 @@ function lgu_config(p: player,t: text):
 				lgu_config({_p},"rtime")
 			else:
 				set {lg::config::rtime} to 0
-				lgu_config({_p},"rtime")	
+				lgu_config({_p},"rtime")
 	else if {_t} is equal to "death":
 		open virtual chest inventory with size 5 with name "&lConfigurer les items" to {_p}
 		make a gui slot 36, 37, 38, 39, 40, 41 and 42 of {_p} with 1 gray stained glass pane named "&f"
@@ -1487,7 +1487,7 @@ function lgu_config(p: player,t: text):
 				set {lg::config::flintrate} to 100
 			lgu_config({_p},"flintrate")
 
- 
+
 function lgu_tp(p: player,b: boolean):
 	set {_ok1} to false
 	while {_ok1} is false:
@@ -1538,7 +1538,7 @@ function lgu_timer():
 			set {_sec} to 0
 		if {_sec2} is equal to 60:
 			add 1 to {_min2}
-			set {_sec2} to 0	
+			set {_sec2} to 0
 		set {_totalsecond} to {_min} * 60 + {_sec}
 		set {_totalsecond3} to {_min2} * 60 + {_sec2}
 		set {_ndaysec2} to {_totalsecond2}
@@ -1712,12 +1712,12 @@ function lgu_timer():
 								apply invisibility without any particles to loop-value for {_seconde}
 								apply night vision without any particles to loop-value for {_seconde}
 							else if {lg::%loop-value%::role} is "Loup-garou" or "Loup-garou blanc" or "Infect père des loups":
-								apply strength without any particles to loop-value for {_seconde} 
+								apply strength without any particles to loop-value for {_seconde}
 								apply night vision without any particles to loop-value for {_seconde}
 							else if {lg::%loop-value%::role} is "Renard":
 								apply night vision without any particles to loop-value for {_seconde}
-						
-						
+
+
 					set {lg::current::day} to false
 				else:
 					set {_seconde} to {_day::1} * 60
@@ -1750,7 +1750,7 @@ function lgu_timer():
 								message "<tooltip:&cCette action n'est réalisable qu'une fois par jour.><cmd:/lg power Salvateur>&8&l[&fCliquez ici dans les 45 secondes pour bénir un joueur&8&l]" to loop-value
 						message "&e------------------------------------" to all players
 						set {lg::current::vote} to true
-						
+
 
 					set {lg::current::day} to true
 
@@ -1764,7 +1764,7 @@ function lgu_timer():
 			if {_xx} is higher than 600:
 				if {_xx} is smaller than 1501:
 					set {_x} to 600
-					
+
 			if {_xx} is higher than 1500:
 				set {_x} to 1500
 			if {_xx} is smaller than 301:
@@ -1983,7 +1983,7 @@ function lgu_spec(p: player,page: number):
 				delete {lg::spec::%{_loopvalue}%}
 				lgu_spec({_p},{_page})
 	make a gui slot 49 of {_p} with 1 anvil named "&eAjouter un joueur" to run:
-		close {_p}'s inventory 
+		close {_p}'s inventory
 		message "&8&l[&6&lLoup-garou&8&l] &7Vous avez 30 seondes pour écrir dans le chat le nom du joueur à ajouter aux spectateurs. Ou tapez ""annuler"" dans le chat" to {_p}
 		set {lg::%{_p}%::spec} to true
 		set {_s} to 0
@@ -2067,7 +2067,7 @@ function lgu_event():
 		skellett delete id based score "LG_UHC_7" for stylish scoreboard with named "LG_UHC"
 		set {lg::current::border} to true
 		set {_s} to 0
-		set {_timespan} to "%({lg::config::dborder} - {lg::config::fborder}) / 2% seconds" parsed as timespans
+		set {_timespan} to "%({lg::config::dborder} - {lg::config::fborder})% seconds" parsed as timespans
 		set diameter of world("%{lg::current::world}%") to {lg::config::fborder} over {_timespan}
 		set {_blocks} to {lg::config::dborder} - {lg::config::fborder}
 		loop {_blocks} times:
@@ -2077,7 +2077,7 @@ function lgu_event():
 			set {_calculb} to round({_calculb})
 			set {lg::current::border} to {_calculb}
 			set the text of id "LG_UHC_2" to "&7Bordure: &a+%{_calculb}%&7/&a-%{_calculb}%"
-			wait 0.5 second
+			wait 1 second
 			if {lg::info::start} is not true:
 				stop trigger
 
@@ -2110,7 +2110,7 @@ function lgu_eventmessage(t: text):
 			skellett delete id based score "LG_UHC_7" for stylish scoreboard with named "LG_UHC"
 			set {lg::current::border} to true
 			set {_s} to 0
-			set {_timespan} to "%({lg::config::dborder} - {lg::config::fborder}) / 2% seconds" parsed as timespans
+			set {_timespan} to "%({lg::config::dborder} - {lg::config::fborder})% seconds" parsed as timespans
 			set diameter of world("%{lg::current::world}%") to {lg::config::fborder} over {_timespan}
 			set {_blocks} to {lg::config::dborder} - {lg::config::fborder}
 			loop {_blocks} times:
@@ -2120,7 +2120,7 @@ function lgu_eventmessage(t: text):
 				set {_calculb} to round({_calculb})
 				set {lg::current::border} to {_calculb}
 				set the text of id "LG_UHC_2" to "&7Bordure: &a+%{_calculb}%&7/&a-%{_calculb}%"
-				wait 0.5 second
+				wait 1 second
 				if {lg::info::start} is not true:
 					stop trigger
 	else if {_t} is equal to "roles":
@@ -2482,7 +2482,7 @@ function lgu_wincheck() :: boolean:
 					message "&a------------------------------------" to all players
 					lgu_endgame()
 					return true
-								
+
 			else:
 				if {_lg} is set:
 					if {_love.1} is not "v":
@@ -2513,7 +2513,7 @@ function lgu_wincheck() :: boolean:
 					message "&a------------------------------------" to all players
 					lgu_endgame()
 					return true
-								
+
 	else:
 		loop {_alive::*}:
 			if loop-value is not {lg::amoureux::1} or {lg::amoureux::2}:
@@ -2564,7 +2564,7 @@ function lgu_respawn(p: player,p2: player):
 	set {_s} to 10
 	loop 17 times:
 		if {_s} is 17:
-			set {_s} to 19 
+			set {_s} to 19
 		if {_s} is 26:
 			set {_s} to 28
 		if {_s} is 10:
@@ -2631,7 +2631,7 @@ function lgu_respawn(p: player,p2: player):
 					delete {lg::spec::%{_p2}%}
 				if {lg::joueurs::%{_p2}%} is not set:
 					set {lg::joueurs::%{_p2}%} to {_p2}
-				
+
 				if {lg::%{_p2}%::ADloc} is not set:
 					if {lg::items::*} is set:
 						set {_s} to 0
@@ -2668,7 +2668,7 @@ function lgu_respawn(p: player,p2: player):
 				delete {lg::spec::%{_p2}%}
 			if {lg::joueurs::%{_p2}%} is not set:
 				set {lg::joueurs::%{_p2}%} to {_p2}
-			
+
 			if {lg::%{_p2}%::ADloc} is not set:
 				if {lg::items::*} is set:
 					set {_s} to 0
@@ -3021,9 +3021,9 @@ function lgu_oracle(p: player,page: number,b: text):
 						message "&8&l[&5Le joueur &3%{_player1}% &5et &3%{_b2}% &5sont &edans des camps adverses&5.&8&l]" to {_p}
 				else:
 					message "&8&l[&5Le joueur &3%{_player1}% &5et &3%{_b2}% &5sont &edans des camps adverses&5.&8&l]" to {_p}
-					
-				
-				
+
+
+
 		add 1 to {_s}
 function lgu_wildchild(p: player,page: number):
 	set {_s} to 1
@@ -3116,11 +3116,11 @@ function lgu_salvateur(p: player,page: number):
 				set {_sec} to {_day::1} + {_day::2}
 				set {_sec} to "%{_sec}% seconds" parsed as timespan
 				apply resistance without any particles to {_loopvalue} for {_sec}
-				set {lg::power::%{_p}%} to true	
+				set {lg::power::%{_p}%} to true
 				stop
 			close {_p}'s inventory
 			message "&cTu as déjà béni ce joueur la dernière fois, change de joueur." to {_p}
-		add 1 to {_s}	
+		add 1 to {_s}
 
 on break of diamond ore:
 	if {lg::info::start} is true:
@@ -3154,7 +3154,7 @@ on chat:
 						set message to subtext of message from characters 2 to (length of message)
 						loop {lg::amoureux::*}:
 							message "&8&l[&d%player%&8&l] &d%message%" to loop-value
-					
+
 				else:
 					if {lg::current::rev} is true:
 						if {lg::%player%::role} is "Loup-garou" or "Loup-garou blanc" or "Infect père des loups":
@@ -3243,12 +3243,12 @@ on death:
 						remove drops from drops
 						force victim to respawn
 						lgu_tp(victim,true)
-						give {_stuff::*} to victim
+
 						message "&8&l[&aVotre pouvoir vous a ressucité.&8&l]" to victim
 						stop
 				if {lg::var::%victim%} is not set:
 					set {lg::var::%victim%} to location of victim
-					
+
 					loop {lg::joueurs::*}:
 						if loop-value is not victim:
 							if {lg::current::rev} is true:
@@ -3258,7 +3258,7 @@ on death:
 										message "<tooltip:&cAttention cette action n'est réalisable qu'une fois.><cmd:/lg power Sorcière %victim%>&8&l[&aCliquez ici dans les 30s pour ressuciter le joueur &3%victim%&8&l]" to loop-value
 										message "" to loop-value
 										set {_ok} to true
-								
+
 								else if {lg::%loop-value%::role} is "Infect père des loups":
 									if {lg::%attacker%::role} is "Loup-garou" or "Loup-garou blanc" or "Infect père des loups":
 										if {lg::power::%loop-value%} is not set:
@@ -3302,7 +3302,7 @@ on death:
 						force victim to respawn
 						set victim's gamemode to spectator
 						apply blindness without any particles to victim for 99999 days
-						wait 30 second 
+						wait 30 second
 						set {_loc} to {lg::var::%victim%}
 						if {lg::var::%victim%} is set:
 							if {lg::info::start} is equal to true:
@@ -3340,7 +3340,7 @@ on death:
 									delete {lg::amoureux::*}
 									kill {_temp2}
 									message "&d%{_temp2}% était amoureux de %{_temp1}%, il meurt donc aussi" to all players
-									
+
 								else if {lg::amoureux::2} is victim:
 									set {_temp1} to {lg::amoureux::1}
 									set {_temp2} to {lg::amoureux::2}
@@ -3353,9 +3353,9 @@ on death:
 								else:
 									message "&cLe joueur &e&l%victim% &cest mort, il était &lVoleur" to all players
 								message "" to all players
-								
+
 								if {lg::%victim%::role} is not "Chasseur":
-									delete {lg::%victim%::role}	
+									delete {lg::%victim%::role}
 									wait 1 second
 									set {_osef} to lgu_wincheck()
 									if {lg::%victim%::role} is "Inquisiteur":
@@ -3369,7 +3369,7 @@ on death:
 										wait 30 seconds
 									delete {lg::%victim%::role}
 								set the text of id "LG_UHC_4" to "&3&lJOUEURS: &3%size of {lg::joueurs::*}%"
-								
+
 					else:
 						if {lg::%victim%::master} is set:
 							if {lg::%victim%::master}'s gamemode is survival:
@@ -3430,7 +3430,7 @@ on death:
 							delete {lg::amoureux::*}
 							kill {_temp1}
 							message "&d%{_temp1}% était amoureux de %{_temp2}%, il meurt donc aussi" to all players
-							
+
 						message "" to all players
 						if {lg::%victim%::voleur} is not true:
 							message "&cLe joueur &e&l%victim% &cest mort, il était &l%{lg::%victim%::role}%" to all players
@@ -3471,7 +3471,7 @@ on quit:
 			set {lg::off::%player%::loc} to location of player
 			if {lg::config::deco} is not "friends":
 				if {lg::config::deco} is "normal":
-					message "&8&l[&6&lLoup-garou&8&l] &7Le joueur &4%player% &7a quitté la partie, il a 30s pour se reconnecter sinon il se fera éliminer de la partie." to all players 
+					message "&8&l[&6&lLoup-garou&8&l] &7Le joueur &4%player% &7a quitté la partie, il a 30s pour se reconnecter sinon il se fera éliminer de la partie." to all players
 					set {_s} to 0
 					while {_s} is not 30:
 						if player is online:
@@ -3522,7 +3522,7 @@ on craft fishing rod:
 
 #-----------------------------------------------------#
 #					Scénarios de Faywyrr 			  #
-#				Merci à Faywyrr pour son aide		  #				  
+#				Merci à Faywyrr pour son aide		  #
 #-----------------------------------------------------#
 
 on mine of iron ore:
@@ -3533,8 +3533,8 @@ on mine of iron ore:
 			damage player's tool by 1
 			wait 2 ticks
 			give player 1 iron ingot
-			drop 1 xp 
-		
+			drop 1 xp
+
 on mine of gold ore:
 	if {lg::info::start} is true:
 		if {lg::config::cutlean} is true:
@@ -3543,8 +3543,8 @@ on mine of gold ore:
 			damage player's tool by 1
 			wait 2 ticks
 			give player 1 gold ingot
-			drop 1 xp 
-			
+			drop 1 xp
+
 on death of a pig:
 	if {lg::info::start} is true:
 		if {lg::config::cutlean} is true:
@@ -3580,7 +3580,7 @@ on break of log:
 					loop blocks in radius 2 around loop-block:
 						if loop-block-2 is log:
 							drop the loop-block-2 at event-block
-							set the loop-block-2 to air 
+							set the loop-block-2 to air
 			loop blocks below:
 				if loop-block is log:
 					drop the loop-block-1 at event-block
